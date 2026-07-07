@@ -5,6 +5,33 @@ A lightweight ranking-as-a-service API, mirroring the shape of a platform like
 ranked list of items. Includes a popularity baseline, a pre-trained-embedding
 content ranker, an offline eval comparing them, and a demo UI.
 
+## Screenshots
+
+**FastAPI's auto-generated docs (`/docs`)** — the live API contract: the
+`/health` check, the `/rank` endpoint, and the request/response schemas
+(`Event`, `RankRequest`, `RankResponse`) generated straight from the
+Pydantic models in `api/schemas.py` and `api/main.py`.
+
+![API Swagger docs](docs/screenshots/api_swagger_docs.png)
+
+**Demo, step 1–2: load data and pick a user** — the onboarding flow starts
+by loading an event dataset (MovieLens sample data here, or your own CSV
+matching the schema) and picking which user to rank for. The app shows
+exactly what it's about to send: 231 history events for user "1", with the
+232nd (most recent) held out as ground truth for the metric step below.
+
+![Demo: load data and pick a user](docs/screenshots/demo_step1_load_data.png)
+
+**Demo, step 3–4: live ranked results and metric comparison** — clicking
+"Rank via API" makes two real HTTP calls to the running `/rank` endpoint
+(one per ranker) and shows the results side by side, plus whether the
+held-out item was recovered. Below that is the aggregate NDCG@10/precision@10
+comparison across all users, reusing the same `evaluate()` function as
+`eval/run_eval.py` — this is what actually tells you which ranker is doing
+better, not the single-user hit above it.
+
+![Demo: ranked results and metric comparison](docs/screenshots/demo_step2_ranked_results.png)
+
 ## Structure
 
 - `api/` — FastAPI app. `schemas.py` defines the generic event schema
